@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_server_address">smb://192.168.221.245/sambashare/</string>
+    <string name="default_username">kishan</string>
+    <string name="default_password">123456</string>
+</resources>
