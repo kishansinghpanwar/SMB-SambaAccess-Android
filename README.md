@@ -80,7 +80,7 @@ ifconfig
 ```
 the output should be like that :
 
-![IP Address](https://linuxhint.com/wp-content/uploads/2021/02/image1-17.png)
+![IP Address](screenshots/fetch-ip-address.png)
 
 Copy that Address, and use the address in that format:
 
