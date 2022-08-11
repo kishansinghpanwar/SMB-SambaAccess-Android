@@ -2,6 +2,12 @@
 # Samba Server Setup and Access it on Android App (SMB)
 This is an Android application, which explains how to set up SMB protocol on Linux and access it in the Android app.
 
+## App Screens
+<img src="screenshots/login-screen.png" width="180" >  <img src="screenshots/home-screen.png" width="180" >  <img src="screenshots/inside-directory-screen.png" width="180" > 
+
+## Ubuntu Share Folder
+<img src="screenshots/ubuntu-share-folder.png" height="350" > 
+
 ## Requirements 
  * Ubuntu machine 
  * Android phone
@@ -80,7 +86,7 @@ ifconfig
 ```
 the output should be like that :
 
-![IP Address](screenshots/fetch-ip-address.png)
+<img src="screenshots/fetch-ip-address.png" height="350" > 
 
 Copy that Address, and use the address in that format:
 
@@ -95,7 +101,24 @@ smb://ip-address/sambashare/
  - **Username** : kishan 
  - **Password** : 123456 
 
+## Setup App
+So We aready setup the SMB share on our linux system, and we have Server Address, Username and Password. 
+- Install the app in phone
+- On Login screen provide the details
+- Click on Stabilize connection, if everything is okay then you can see the Directories and Files of the folder.
+- That's all. 
+
 ## Related
 Here are some related guides:
 
-Setup Server: https://ubuntu.com/tutorials/install-and-configure-samba#1-overview
+Setup Server : https://ubuntu.com/tutorials/install-and-configure-samba#1-overview </br>
+JCIFS Jar    : https://www.jcifs.org
+
+## Support
+
+For support, email singhkishanpanwar@gmail.com or send message to Skype : https://join.skype.com/invite/fBcaUWiNAWTh
+
+
+## Contribution
+
+🌟 Thank you for using this project and If this is useful for you, then please Star 🌟 this. Also you can send pull request and create a issue for any bug. Thanks again.
