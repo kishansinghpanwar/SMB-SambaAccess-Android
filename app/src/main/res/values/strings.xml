@@ -5,4 +5,8 @@
     <string name="password">Password</string>
     <string name="stabilize_connection">Stabilize connection</string>
     <string name="n_a">N/A</string>
+    <string name="please_wait">Please wait</string>
+    <string name="login">Login</string>
+    <string name="login_success">Login successful</string>
+    <string name="no_files_found">No files found</string>
 </resources>

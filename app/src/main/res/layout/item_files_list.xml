@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/imgFileIcon"
+        android:layout_width="@dimen/_27mdp"
+        android:layout_height="@dimen/_27mdp"
+        android:layout_margin="@dimen/_8mdp"
+        android:padding="@dimen/_2mdp"
+        android:src="@drawable/ic_folder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/txtExtension"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="@font/asap_regular"
+        android:gravity="center"
+        android:paddingTop="@dimen/_6mdp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_5msp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFileIcon"
+        app:layout_constraintEnd_toEndOf="@+id/imgFileIcon"
+        app:layout_constraintStart_toStartOf="@+id/imgFileIcon"
+        app:layout_constraintTop_toTopOf="@+id/imgFileIcon" />
+
+    <TextView
+        android:id="@+id/txtFileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5mdp"
+        android:fontFamily="@font/asap_medium"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12msp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgFileIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
