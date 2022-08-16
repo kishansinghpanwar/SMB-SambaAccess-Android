@@ -1,21 +1,32 @@
 package com.app.sambaaccesssmb.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.app.sambaaccesssmb.interfaces.FilesClickListener;
 import com.app.sambaaccesssmb.R;
-import com.app.sambaaccesssmb.interfaces.ReceiveCallback;
-import com.app.sambaaccesssmb.connection.SMBConnection;
 import com.app.sambaaccesssmb.adapter.FilesAdapter;
+import com.app.sambaaccesssmb.connection.SMBConnection;
 import com.app.sambaaccesssmb.databinding.ActivityMainBinding;
+import com.app.sambaaccesssmb.interfaces.FilesClickListener;
+import com.app.sambaaccesssmb.interfaces.ReceiveCallback;
 import com.app.sambaaccesssmb.model.FilesModel;
+import com.app.sambaaccesssmb.utils.Utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +34,9 @@ import java.util.List;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 
-public class MainActivity extends AppCompatActivity implements FilesClickListener {
+public class MainActivity extends AppCompatActivity implements FilesClickListener, View.OnClickListener {
+    final int PICK_FILE_REQUEST_CODE = 159;
+    private final String TAG = this.getClass().getSimpleName();
     SMBConnection smbConnection = SMBConnection.getInstance();
     ActivityMainBinding binding;
     FilesAdapter filesAdapter;
@@ -40,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements FilesClickListene
         filesAdapter = new FilesAdapter(MainActivity.this, fileList, this);
         binding.rvData.setAdapter(filesAdapter);
 
+        binding.btnUploadFile.setOnClickListener(this);
         try {
             setupAdapter();
         } catch (SmbException e) {
@@ -111,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements FilesClickListene
                 smbConnection.getAllFiles();
             } else {
                 SmbFile smbFile = backstackQueue.get(backstackQueue.size() - 1);
-                if (smbFile == smbConnection.getCurrentSMBFile()){
+                if (smbFile == smbConnection.getCurrentSMBFile()) {
                     backstackQueue.remove(backstackQueue.size() - 1);
                     onBackPressed();
                     return;
@@ -122,4 +136,66 @@ public class MainActivity extends AppCompatActivity implements FilesClickListene
             }
         }
     }
+
+    @Override
+    public void onClick(View view) {
+        if (view == binding.btnUploadFile) {
+            openFilePicker();
+        }
+    }
+
+    private void openFilePicker() {
+        Intent intent;
+        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setType("*/*");
+        startActivityForResult(Intent.createChooser(intent, "Select File"), PICK_FILE_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri uri = null;
+                try {
+                    uri = data.getData();
+                    getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+
+                    File file = null;
+                    if (uri != null) {
+                        file = new File(getCacheDir(), Utils.getFileName(uri));
+                    }
+                    try (OutputStream output = new FileOutputStream(file)) {
+                        byte[] buffer = new byte[4 * 1024]; // or other buffer size
+                        int read;
+                        while ((read = inputStream.read(buffer)) != -1) {
+                            output.write(buffer, 0, read);
+                        }
+                        output.flush();
+                    }
+
+                    if (file != null) {
+                        Log.d(TAG, "onActivityResult: source: " + file + ", isExist: " + file.exists());
+                        if (file.exists())
+                            smbConnection.uploadFile(file);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
 }

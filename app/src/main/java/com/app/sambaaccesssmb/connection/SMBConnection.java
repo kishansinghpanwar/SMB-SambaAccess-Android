@@ -6,11 +6,16 @@ import androidx.annotation.NonNull;
 
 import com.app.sambaaccesssmb.interfaces.ReceiveCallback;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileOutputStream;
 
 public class SMBConnection {
     private static volatile SMBConnection instance = null;
@@ -101,6 +106,45 @@ public class SMBConnection {
             thread.setName("smb-get-files");
             thread.start();
         }
+    }
+
+    public void uploadFile(File file) throws IOException {
+        Thread thread = new Thread(() -> {
+            try {
+                // local source file and target smb file
+                SmbFile smbFileTarget = new SmbFile(currentSMBFile, file.getName());
+
+                // input and output stream
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                SmbFileOutputStream smbfos = new SmbFileOutputStream(smbFileTarget);
+
+                // writing data
+                try {
+                    // 16 kb
+                    final byte[] b = new byte[16 * 1024];
+                    int read;
+                    if (fis != null) {
+                        while ((read = fis.read(b, 0, b.length)) > 0) {
+                            smbfos.write(b, 0, read);
+                        }
+                    }
+                } finally {
+                    if (fis != null) {
+                        fis.close();
+                    }
+                    smbfos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.setName("upload-file");
+        thread.start();
     }
 
     public void releaseThread() {

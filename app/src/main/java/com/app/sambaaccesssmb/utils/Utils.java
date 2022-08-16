@@ -1,8 +1,13 @@
 package com.app.sambaaccesssmb.utils;
 
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
+
 import androidx.annotation.NonNull;
 
 import com.app.sambaaccesssmb.R;
+import com.app.sambaaccesssmb.SMBAccess;
 
 public class Utils {
     public Utils() {
@@ -64,5 +69,33 @@ public class Utils {
                 return R.drawable.file;
 
         }
+    }
+
+    public static String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = SMBAccess.getInstance()
+                    .getContentResolver()
+                    .query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    result = cursor.getString(columnIndex);
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
+    @NonNull
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException("Cannot clone utils class.");
     }
 }
