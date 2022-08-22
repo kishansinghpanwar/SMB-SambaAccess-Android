@@ -147,6 +147,20 @@ public class SMBConnection {
         thread.start();
     }
 
+    public void deleteFile(SmbFile currentFile) {
+        Thread thread = new Thread(() -> {
+            try {
+                if (currentFile != null && currentFile.canWrite()) {
+                    currentFile.delete();
+                }
+            } catch (SmbException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.setName("delete-file");
+        thread.start();
+    }
+
     public void releaseThread() {
         threadRunning = false;
     }

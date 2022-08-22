@@ -6,6 +6,7 @@
         <entry key="../../../../../layout/custom_preview.xml" value="0.384375" />
         <entry key="../../../../72A26FB5A26F7D0B/sdk/platforms/android-32/data/res/drawable/list_selector_background.xml" value="0.119" />
         <entry key="app/src/main/res/drawable/app_icon.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.2615" />
         <entry key="app/src/main/res/drawable/ic_file.xml" value="0.235" />
         <entry key="app/src/main/res/drawable/ic_folder.xml" value="0.235" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3507692307692308" />

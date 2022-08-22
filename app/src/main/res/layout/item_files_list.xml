@@ -42,8 +42,21 @@
         android:textColor="@color/black"
         android:textSize="@dimen/_12msp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imgDelete"
         app:layout_constraintStart_toEndOf="@+id/imgFileIcon"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgDelete"
+        android:layout_width="@dimen/_27mdp"
+        android:layout_height="@dimen/_27mdp"
+        android:layout_margin="@dimen/_8mdp"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/_5mdp"
+        android:src="@drawable/ic_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

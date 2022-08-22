@@ -58,6 +58,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         }
 
         holder.itemView.setOnClickListener(view -> filesClickListener.onFileClick(position));
+        holder.imgDelete.setOnClickListener(view -> filesClickListener.onDeleteClick(position));
     }
 
     @Override
@@ -69,10 +70,12 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         private final TextView txtFileName;
         private final TextView txtExtension;
         private final ImageView imgFileIcon;
+        private final ImageView imgDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgFileIcon = itemView.findViewById(R.id.imgFileIcon);
+            imgDelete = itemView.findViewById(R.id.imgDelete);
             txtExtension = itemView.findViewById(R.id.txtExtension);
             txtFileName = itemView.findViewById(R.id.txtFileName);
         }

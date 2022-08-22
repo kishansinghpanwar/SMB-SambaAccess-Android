@@ -115,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements FilesClickListene
     }
 
     @Override
+    public void onDeleteClick(int position) {
+        smbConnection.deleteFile(smbFileList.get(position));
+    }
+
+    @Override
     public void onBackPressed() {
         if (smbConnection.getCurrentSMBFile() == smbConnection.getRootSMBFile()) {
             smbConnection.releaseThread();
