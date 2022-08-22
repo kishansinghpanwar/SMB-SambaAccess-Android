@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements FilesClickListene
             binding.txtTitle.setText(fileList.get(position).getName());
             smbConnection.getAllFiles(smbFileList.get(position));
             backstackQueue.add(smbFileList.get(position));
+        }else{
+            smbConnection.downloadFile(smbFileList.get(position));
         }
     }
 

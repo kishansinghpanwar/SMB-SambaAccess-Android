@@ -40,7 +40,11 @@
                     android:id="@+id/rvData"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:clipToPadding="false"
+                    android:paddingBottom="@dimen/_80mdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="12"
+                    tools:listitem="@layout/item_files_list" />
 
                 <TextView
                     android:id="@+id/txtNoFilesFound"

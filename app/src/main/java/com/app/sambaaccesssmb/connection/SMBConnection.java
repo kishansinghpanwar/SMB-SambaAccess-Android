@@ -1,20 +1,34 @@
 package com.app.sambaaccesssmb.connection;
 
+import static java.security.AccessController.getContext;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
+import com.app.sambaaccesssmb.BuildConfig;
+import com.app.sambaaccesssmb.SMBAccess;
 import com.app.sambaaccesssmb.interfaces.ReceiveCallback;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileInputStream;
 import jcifs.smb.SmbFileOutputStream;
 
 public class SMBConnection {
@@ -159,6 +173,51 @@ public class SMBConnection {
         });
         thread.setName("delete-file");
         thread.start();
+    }
+
+    public void downloadFile(SmbFile smbFile){
+        Thread thread = new Thread(() -> {
+            try {
+                // local source file and target smb file
+                File smbFileTarget = new File(SMBAccess.getInstance().getCacheDir(), smbFile.getName());
+
+                // input and output stream
+
+                // writing data
+                try (SmbFileInputStream fis = new SmbFileInputStream(smbFile); FileOutputStream fos = new FileOutputStream(smbFileTarget)) {
+                    // 16 kb
+                    final byte[] b = new byte[16 * 1024];
+                    int read;
+                    while ((read = fis.read(b, 0, b.length)) > 0) {
+                        fos.write(b, 0, read);
+                    }
+                }
+                viewFile(smbFileTarget);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.setName("download-file");
+        thread.start();
+    }
+
+
+    private void viewFile(File file){
+        Context context = SMBAccess.getInstance();
+        Uri fileURI = FileProvider.getUriForFile(context,
+                BuildConfig.APPLICATION_ID + ".provider",
+                file);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(fileURI);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            context.grantUriPermission(packageName, fileURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        SMBAccess.getInstance().startActivity(intent);
     }
 
     public void releaseThread() {
